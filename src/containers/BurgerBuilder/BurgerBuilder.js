@@ -75,6 +75,7 @@ class BurgerBuilder extends Component {
     }
 
     placeOrderHandler = () => {
+        //TODO
         alert('Order placed');
     }
 

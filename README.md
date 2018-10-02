@@ -1,3 +1,10 @@
+
+# React-Burger-Builder-App
+
+This is a simple burger builder app where the user can customize a delicious burger by selecting the desired ingredients and placing the order. It is merely a demonstration of the mechanics behind React and how state interchanges between the underlying components. Most of the components within are functional-based where state is encapsulated in a few class-based components so to enforce the single source of truth principle.
+
+##
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
@@ -31,7 +38,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
   - [Changing the HTML](#changing-the-html)
   - [Adding Assets Outside of the Module System](#adding-assets-outside-of-the-module-system)
   - [When to Use the `public` Folder](#when-to-use-the-public-folder)
-- [Using Global Variables](#using-global-variables)
+- [Using Global Variables](#using-global-variables)å
 - [Adding Bootstrap](#adding-bootstrap)
   - [Using a Custom Theme](#using-a-custom-theme)
 - [Adding Flow](#adding-flow)
