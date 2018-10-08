@@ -1,4 +1,3 @@
-
 # React-Burger-Builder-App
 
 This is a simple burger builder app where the user can customize a delicious burger by selecting the desired ingredients and placing the order. It is merely a demonstration on how React works, the mechanics behind it, and how state is maintained and propagated down the component hierarchy. Most of the components within are functional in nature where state is only encapsulated in a few class-based components so to enforce the single source of truth principle. The default `create-react-app` configuration was 'rejected' so to use CSS modules. CSS media query was used for responsive UI to accommodate devices ranging from desktops to mobile phones.

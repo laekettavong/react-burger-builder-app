@@ -21,4 +21,9 @@
 
 .Danger {
     color: #944317;
+    cursor: not-allowed;
+}
+
+.Button:disabled {
+    color: #ccc;
 }
