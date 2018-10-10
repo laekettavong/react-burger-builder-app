@@ -4,6 +4,9 @@ import classes from './ContactInfo.css'
 import axios from '../../../axios-orders'
 import Spinner from '../../../components/UI/Spinner/Spinner'
 import Input from '../../../components/UI/Input/Input'
+import { connect } from 'react-redux'
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler'
+import * as Actions from '../../../store/actions/index'
 
 class ContactInfo extends Component {
     constructor(props) {
@@ -46,7 +49,8 @@ class ContactInfo extends Component {
                     valid: false,
                     touched: false,
                     validation: {
-                        required: true
+                        required: true,
+                        isEmail: true
                     }
                 },
                 street: {
@@ -100,7 +104,8 @@ class ContactInfo extends Component {
                     validation: {
                         required: true,
                         minLength: 5,
-                        maxLength: 5
+                        maxLength: 5,
+                        isNumeric: true
                     }
                 },
                 deliveryMethod: {
@@ -116,14 +121,12 @@ class ContactInfo extends Component {
                     }
                 },
             },
-            loading: false,
             formIsValid: false
         }
     }
 
     submitOrderHandler = (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
 
         const formData = {}
         for (let elemId in this.state.orderForm) {
@@ -131,22 +134,12 @@ class ContactInfo extends Component {
         }
 
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ingreds,
             price: this.props.price,
             orderData: formData
         }
 
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({ loading: false });
-                this.props.history.push('/')
-                //console.log(response);
-            })
-            .catch(err => {
-                console.log(err)
-                this.setState({ loading: false });
-
-            })
+        this.props.onOrderBurger(order)
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
@@ -190,6 +183,16 @@ class ContactInfo extends Component {
             isValid = isValid && value.length <= rules.minLength
         }
 
+        if (rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value) && isValid
+        }
+
+        if (rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
+        }
+
 
         return isValid;
     }
@@ -219,7 +222,7 @@ class ContactInfo extends Component {
                 <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner />
         }
         return (
@@ -231,4 +234,18 @@ class ContactInfo extends Component {
     }
 }
 
-export default ContactInfo;
+const mapStateToProps = state => {
+    return {
+        ingreds: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.order.loading
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (orderData) => dispatch(Actions.purchaseBurger(orderData))
+    }
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactInfo, axios));
