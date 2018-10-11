@@ -43,7 +43,7 @@ class ContactInfo extends Component {
                     elementType: 'input',
                     value: '',
                     elementConfig: {
-                        type: 'text',
+                        type: 'email',
                         placeholder: 'Email'
                     },
                     valid: false,
@@ -136,10 +136,11 @@ class ContactInfo extends Component {
         const order = {
             ingredients: this.props.ingreds,
             price: this.props.price,
-            orderData: formData
+            orderData: formData,
+            userId: this.props.userId
         }
 
-        this.props.onOrderBurger(order)
+        this.props.onOrderBurger(order, this.props.token)
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
@@ -193,7 +194,6 @@ class ContactInfo extends Component {
             isValid = pattern.test(value) && isValid
         }
 
-
         return isValid;
     }
 
@@ -238,13 +238,15 @@ const mapStateToProps = state => {
     return {
         ingreds: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onOrderBurger: (orderData) => dispatch(Actions.purchaseBurger(orderData))
+        onOrderBurger: (orderData, token) => dispatch(Actions.purchaseBurger(orderData, token))
     }
 
 }

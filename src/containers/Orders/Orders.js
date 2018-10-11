@@ -8,31 +8,8 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 
 
 class Orders extends Component {
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         orders: [],
-    //         loading: true
-    //     }
-    // }
-
     componentDidMount() {
-        this.props.onFetchOrders();
-        // axios.get('/orders.json')
-        //     .then(res => {
-        //         const orders = [];
-        //         for (let key in res.data) {
-        //             orders.push({
-        //                 ...res.data[key],
-        //                 id: key
-        //             });
-        //         }
-
-        //         this.setState({ orders, loading: false })
-        //     })
-        //     .catch(err => {
-        //         this.setState({ loading: false })
-        //     })
+        this.props.onFetchOrders(this.props.token, this.props.userId);
     }
 
     render() {
@@ -53,13 +30,15 @@ class Orders extends Component {
 const mapStateToProps = state => {
     return {
         orders: state.order.orders,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: () => dispatch(Actions.fetchOrders())
+        onFetchOrders: (token, userId) => dispatch(Actions.fetchOrders(token, userId))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Orders, axios));

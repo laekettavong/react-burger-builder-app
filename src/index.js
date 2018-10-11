@@ -8,28 +8,30 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import burgerBuilderReducer from './store/reducers/burgerBuilder'
 import orderReducer from './store/reducers/order'
+import authReducer from './store/reducers/auth'
 import thunk from 'redux-thunk'
 
 //custom middleware
-const logger = store => {
-    return next => {
-        return action => {
-            console.log('[Middleware] dispatching', action);
-            const result = next(action);
-            console.log('[Middleware] next state', store.getState());
-            return result;
-        }
-    }
-}
+// const logger = store => {
+//     return next => {
+//         return action => {
+//             console.log('[Middleware] dispatching', action);
+//             const result = next(action);
+//             console.log('[Middleware] next state', store.getState());
+//             return result;
+//         }
+//     }
+// }
 
 const rootReducer = combineReducers({
     burgerBuilder: burgerBuilderReducer,
-    order: orderReducer
+    order: orderReducer,
+    auth: authReducer
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
 
 const app = (
     <Provider store={store}>
