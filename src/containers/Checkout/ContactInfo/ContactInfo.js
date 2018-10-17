@@ -7,6 +7,7 @@ import Input from '../../../components/UI/Input/Input'
 import { connect } from 'react-redux'
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler'
 import * as Actions from '../../../store/actions/index'
+import { updateObject, checkValidity } from '../../../shared/utility'
 
 class ContactInfo extends Component {
     constructor(props) {
@@ -144,57 +145,20 @@ class ContactInfo extends Component {
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        const updatedOrderForm = {
-            ...this.state.orderForm
-        };
+        const updatedFormElement = updateObject(this.state.orderForm[inputIdentifier],
+            {
+                value: event.target.value,
+                valid: checkValidity(event.target.value, this.state.orderForm[inputIdentifier].validation),
+                touched: true
+            })
 
-        const updatedFormElement = {
-            ...updatedOrderForm[inputIdentifier]
-        };
-
-        updatedFormElement.value = event.target.value;
-        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.touched = true;
-        updatedOrderForm[inputIdentifier] = updatedFormElement;
+        const updatedOrderForm = updateObject(this.state.orderForm, { [inputIdentifier]: updatedFormElement })
 
         let formIsValid = true;
         for (let inputElem in updatedOrderForm) {
             formIsValid = updatedOrderForm[inputElem].valid && formIsValid;
         }
         this.setState({ orderForm: updatedOrderForm, formIsValid });
-    }
-
-    checkValidity(value, rules) {
-        let isValid = true;
-
-        //if there are no rules...assume valid by default
-        if (!rules) {
-            return true
-        }
-
-        if (rules.required) {
-            isValid = isValid && value.trim() !== '';
-        }
-
-        if (rules.minLength) {
-            isValid = isValid && value.length >= rules.minLength
-        }
-
-        if (rules.maxLength) {
-            isValid = isValid && value.length <= rules.minLength
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
     }
 
     render() {
